@@ -7,6 +7,8 @@
 *.db
 *.sqlite
 *.sqlite3
+*.db-shm
+*.db-wal
 quantbot_risk.db
 market_data_cache.db
 test_quantbot_risk.db

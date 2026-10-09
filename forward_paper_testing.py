@@ -1197,6 +1197,12 @@ class ForwardPaperManager:
         target_date = pd.to_datetime(today_date_str) if today_date_str else all_dates[-1]
         target_str = target_date.strftime("%Y-%m-%d")
         
+        # Check if already processed
+        latest_entry = self.store.get_latest_ledger_entry("NIFTY50_BUY_HOLD", "v1.0.0", "STANDARD_100K")
+        if latest_entry and latest_entry["trade_date"] >= target_str:
+            logger.info(f"Forward paper ledger already up-to-date as of {latest_entry['trade_date']}. Target date {target_str} already recorded. Skipping duplicate run.")
+            return {}
+        
         source = "FORWARD" if target_str >= FORWARD_START_DATE else "BACKTEST_SEED"
         
         today_open_prices = {sym: float(df.loc[target_date, "Open"]) for sym, df in all_dfs.items() if target_date in df.index}

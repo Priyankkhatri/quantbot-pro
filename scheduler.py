@@ -201,10 +201,11 @@ class QuantBotScheduler:
             
             # 1. Check current active production model
             active_version = self.store.get_active_model_version()
+            active_version_id = active_version.get("version_id", "v4.0.0") if active_version else "v4.0.0"
             active_pf = active_version.get("profit_factor", 1.40) if active_version else 1.40
             active_auc = active_version.get("roc_auc", 0.65) if active_version else 0.65
 
-            logger.info(f"Current Production Model: {active_version.get('version_id', 'v4.0.0')} | OOS PF: {active_pf:.2f} | ROC-AUC: {active_auc:.3f}")
+            logger.info(f"Current Production Model: {active_version_id} | OOS PF: {active_pf:.2f} | ROC-AUC: {active_auc:.3f}")
 
             # 2. Train candidate model on latest data
             candidate_version_id = f"v4.0.{today_str.replace('-', '')}"
@@ -221,7 +222,7 @@ class QuantBotScheduler:
 
             # 3. Model Promotion Gate: Must beat active checkpoint on out-of-sample window
             if candidate_pf > active_pf and candidate_auc >= active_auc:
-                logger.info(f"PROMOTION GATE PASSED: Candidate ({candidate_version_id}) beats Active ({active_version.get('version_id', 'v4.0.0')}). Promoting...")
+                logger.info(f"PROMOTION GATE PASSED: Candidate ({candidate_version_id}) beats Active ({active_version_id}). Promoting...")
                 
                 self.store.record_model_version(
                     version_id=candidate_version_id,
