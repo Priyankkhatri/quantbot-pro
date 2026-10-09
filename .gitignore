@@ -1,0 +1,32 @@
+# Environment and Secret Configurations
+.env
+.env.*
+*.env
+
+# SQLite Database Files
+*.db
+*.sqlite
+*.sqlite3
+quantbot_risk.db
+market_data_cache.db
+test_quantbot_risk.db
+
+# Logs and Rotation Files
+logs/
+*.log
+
+# Python Bytecode and Cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+
+# Temporary and Audit Trade Exports
+scratch/
+audit_trades_pooled.csv
+trades_audit_*.csv
+
+# OS Generated Files
+.DS_Store
+Thumbs.db

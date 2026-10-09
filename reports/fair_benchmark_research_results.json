@@ -1,0 +1,527 @@
+{
+  "script_name": "strategy_research_fair_benchmark.py",
+  "timestamp": "2026-10-09T21:50:55 IST",
+  "input_hash": "19152d7dfa65a5efa412d1c0c40fb678869ab223b923590a41103d4f5c3beb31",
+  "database_file": "market_data_cache.db",
+  "benchmarks": {
+    "equal_weight_cagr": 17.26,
+    "equal_weight_sharpe": 0.714,
+    "nifty_cagr": 9.49,
+    "nifty_sharpe": 0.262
+  },
+  "variants": [
+    {
+      "name": "Mom (12-1M, Top Quintile, Monthly)",
+      "gross_cagr": 15.337116087787583,
+      "net_cagr": 14.465386841459038,
+      "after_tax_cagr": 11.202503003298702,
+      "sharpe_net": 0.46016230314343776,
+      "max_dd": 36.7023911204578,
+      "turnover": 268.92537313432837,
+      "cost_drag": 0.7590289572537313,
+      "tax_drag": 2.8930773682918076,
+      "trades": 143,
+      "excess_cagr_ew": -2.8,
+      "excess_sharpe_ew": -0.254,
+      "excess_cagr_nifty": 4.97,
+      "excess_sharpe_nifty": 0.198,
+      "boot_ew_mean": -1.3,
+      "boot_ew_ci": [
+        -9.1,
+        7.01
+      ],
+      "boot_ew_pval": 0.7752,
+      "boot_ew_zero": true,
+      "boot_nifty_ci": [
+        -4.07,
+        14.84
+      ]
+    },
+    {
+      "name": "Mom (9-1M, Top Quintile, Monthly)",
+      "gross_cagr": 17.052523713069224,
+      "net_cagr": 15.884732927409463,
+      "after_tax_cagr": 12.26255028246641,
+      "sharpe_net": 0.524362574352438,
+      "max_dd": 33.31098383276213,
+      "turnover": 355.4328358208955,
+      "cost_drag": 1.003192118328358,
+      "tax_drag": 3.176946585481893,
+      "trades": 189,
+      "excess_cagr_ew": -1.38,
+      "excess_sharpe_ew": -0.19,
+      "excess_cagr_nifty": 6.39,
+      "excess_sharpe_nifty": 0.262,
+      "boot_ew_mean": -0.16,
+      "boot_ew_ci": [
+        -8.44,
+        8.26
+      ],
+      "boot_ew_pval": 1.0,
+      "boot_ew_zero": true,
+      "boot_nifty_ci": [
+        -3.33,
+        16.21
+      ]
+    },
+    {
+      "name": "Mom (6-1M, Top Quintile, Monthly)",
+      "gross_cagr": 13.665954335512055,
+      "net_cagr": 12.305154730475088,
+      "after_tax_cagr": 9.575892262416751,
+      "sharpe_net": 0.3732098563546123,
+      "max_dd": 36.7018682745859,
+      "turnover": 426.8955223880597,
+      "cost_drag": 1.2048921209552237,
+      "tax_drag": 2.461030946095018,
+      "trades": 227,
+      "excess_cagr_ew": -4.96,
+      "excess_sharpe_ew": -0.341,
+      "excess_cagr_nifty": 2.81,
+      "excess_sharpe_nifty": 0.111,
+      "boot_ew_mean": -3.28,
+      "boot_ew_ci": [
+        -10.61,
+        4.14
+      ],
+      "boot_ew_pval": 0.372,
+      "boot_ew_zero": true,
+      "boot_nifty_ci": [
+        -5.06,
+        11.78
+      ]
+    },
+    {
+      "name": "Mom (12-1M, Top Tercile, Monthly)",
+      "gross_cagr": 17.540587384820316,
+      "net_cagr": 16.86908308342483,
+      "after_tax_cagr": 12.993728599338583,
+      "sharpe_net": 0.5982115180518651,
+      "max_dd": 34.590615049425146,
+      "turnover": 203.1044776119402,
+      "cost_drag": 0.5732526390447759,
+      "tax_drag": 3.373816616684966,
+      "trades": 189,
+      "excess_cagr_ew": -0.39,
+      "excess_sharpe_ew": -0.116,
+      "excess_cagr_nifty": 7.38,
+      "excess_sharpe_nifty": 0.336,
+      "boot_ew_mean": 0.32,
+      "boot_ew_ci": [
+        -5.27,
+        5.72
+      ],
+      "boot_ew_pval": 0.9036,
+      "boot_ew_zero": true,
+      "boot_nifty_ci": [
+        -0.05,
+        13.6
+      ]
+    },
+    {
+      "name": "Mom (12-1M, Top Quintile, Quarterly)",
+      "gross_cagr": 14.516404092781343,
+      "net_cagr": 13.989028718982244,
+      "after_tax_cagr": 10.845175642265282,
+      "sharpe_net": 0.4351142323278408,
+      "max_dd": 40.13928563580223,
+      "turnover": 163.61194029850745,
+      "cost_drag": 0.4617868481194029,
+      "tax_drag": 2.7978057437964488,
+      "trades": 87,
+      "excess_cagr_ew": -3.27,
+      "excess_sharpe_ew": -0.279,
+      "excess_cagr_nifty": 4.5,
+      "excess_sharpe_nifty": 0.173,
+      "boot_ew_mean": -1.6,
+      "boot_ew_ci": [
+        -9.75,
+        6.37
+      ],
+      "boot_ew_pval": 0.7028,
+      "boot_ew_zero": true,
+      "boot_nifty_ci": [
+        -4.03,
+        14.03
+      ]
+    },
+    {
+      "name": "Low-Vol (120D, Top Quintile, Monthly)",
+      "gross_cagr": 16.73167897278285,
+      "net_cagr": 15.954020365630228,
+      "after_tax_cagr": 12.314281423126383,
+      "sharpe_net": 0.6684453834535373,
+      "max_dd": 27.437838137083446,
+      "turnover": 236.95522388059703,
+      "cost_drag": 0.6687947455522387,
+      "tax_drag": 3.190804073126046,
+      "trades": 126,
+      "excess_cagr_ew": -1.31,
+      "excess_sharpe_ew": -0.046,
+      "excess_cagr_nifty": 6.46,
+      "excess_sharpe_nifty": 0.406,
+      "boot_ew_mean": -1.21,
+      "boot_ew_ci": [
+        -8.44,
+        5.68
+      ],
+      "boot_ew_pval": 0.6636,
+      "boot_ew_zero": true,
+      "boot_nifty_ci": [
+        -2.21,
+        13.05
+      ]
+    },
+    {
+      "name": "Low-Vol (60D, Top Quintile, Monthly)",
+      "gross_cagr": 12.787286845162015,
+      "net_cagr": 11.673774021260419,
+      "after_tax_cagr": 9.097531674748627,
+      "sharpe_net": 0.3956964098291681,
+      "max_dd": 37.289791671093056,
+      "turnover": 351.67164179104475,
+      "cost_drag": 0.9925763287164177,
+      "tax_drag": 2.334754804252084,
+      "trades": 187,
+      "excess_cagr_ew": -5.59,
+      "excess_sharpe_ew": -0.319,
+      "excess_cagr_nifty": 2.18,
+      "excess_sharpe_nifty": 0.133,
+      "boot_ew_mean": -4.77,
+      "boot_ew_ci": [
+        -11.13,
+        1.07
+      ],
+      "boot_ew_pval": 0.1148,
+      "boot_ew_zero": true,
+      "boot_nifty_ci": [
+        -4.66,
+        7.79
+      ]
+    },
+    {
+      "name": "Low-Vol (250D, Top Quintile, Monthly)",
+      "gross_cagr": 13.527424063153525,
+      "net_cagr": 12.926698410319283,
+      "after_tax_cagr": 10.045680157409919,
+      "sharpe_net": 0.4913869998548355,
+      "max_dd": 25.68089634682316,
+      "turnover": 188.0597014925373,
+      "cost_drag": 0.5307894805970148,
+      "tax_drag": 2.5853396820638563,
+      "trades": 100,
+      "excess_cagr_ew": -4.34,
+      "excess_sharpe_ew": -0.223,
+      "excess_cagr_nifty": 3.44,
+      "excess_sharpe_nifty": 0.229,
+      "boot_ew_mean": -3.86,
+      "boot_ew_ci": [
+        -10.76,
+        2.75
+      ],
+      "boot_ew_pval": 0.234,
+      "boot_ew_zero": true,
+      "boot_nifty_ci": [
+        -4.64,
+        10.05
+      ]
+    },
+    {
+      "name": "Low-Vol (120D, Top Tercile, Monthly)",
+      "gross_cagr": 13.804564215825366,
+      "net_cagr": 13.374105424440108,
+      "after_tax_cagr": 10.382928185329199,
+      "sharpe_net": 0.509659818190442,
+      "max_dd": 30.30584778373352,
+      "turnover": 134.3283582089552,
+      "cost_drag": 0.3791353432835819,
+      "tax_drag": 2.6748210848880216,
+      "trades": 125,
+      "excess_cagr_ew": -3.89,
+      "excess_sharpe_ew": -0.205,
+      "excess_cagr_nifty": 3.88,
+      "excess_sharpe_nifty": 0.247,
+      "boot_ew_mean": -3.41,
+      "boot_ew_ci": [
+        -8.61,
+        1.43
+      ],
+      "boot_ew_pval": 0.1592,
+      "boot_ew_zero": true,
+      "boot_nifty_ci": [
+        -2.53,
+        8.73
+      ]
+    },
+    {
+      "name": "Low-Vol (120D, Top Quintile, Quarterly)",
+      "gross_cagr": 17.811944328702324,
+      "net_cagr": 17.313034652691584,
+      "after_tax_cagr": 13.322500175494302,
+      "sharpe_net": 0.7278051333217921,
+      "max_dd": 28.96912797055935,
+      "turnover": 150.44776119402985,
+      "cost_drag": 0.42463158447761185,
+      "tax_drag": 3.4626069305383167,
+      "trades": 80,
+      "excess_cagr_ew": 0.05,
+      "excess_sharpe_ew": 0.013,
+      "excess_cagr_nifty": 7.82,
+      "excess_sharpe_nifty": 0.465,
+      "boot_ew_mean": 0.04,
+      "boot_ew_ci": [
+        -7.05,
+        6.64
+      ],
+      "boot_ew_pval": 1.0,
+      "boot_ew_zero": true,
+      "boot_nifty_ci": [
+        -0.72,
+        13.87
+      ]
+    },
+    {
+      "name": "Mom + Low-Vol 50/50 Combo (Monthly)",
+      "gross_cagr": 13.874197064034988,
+      "net_cagr": 12.92960009414912,
+      "after_tax_cagr": 10.047838415572752,
+      "sharpe_net": 0.4565744563316607,
+      "max_dd": 30.433374176671407,
+      "turnover": 295.25373134328356,
+      "cost_drag": 0.8333394845373133,
+      "tax_drag": 2.5859200188298237,
+      "trades": 157,
+      "excess_cagr_ew": -4.33,
+      "excess_sharpe_ew": -0.258,
+      "excess_cagr_nifty": 3.44,
+      "excess_sharpe_nifty": 0.194,
+      "boot_ew_mean": -3.59,
+      "boot_ew_ci": [
+        -10.33,
+        2.61
+      ],
+      "boot_ew_pval": 0.2624,
+      "boot_ew_zero": true,
+      "boot_nifty_ci": [
+        -4.67,
+        10.11
+      ]
+    },
+    {
+      "name": "Mom + Low-Vol 50/50 Combo (Quarterly)",
+      "gross_cagr": 14.879798438594571,
+      "net_cagr": 14.34471072098944,
+      "after_tax_cagr": 11.112170034010926,
+      "sharpe_net": 0.5232917409624803,
+      "max_dd": 32.1083181894824,
+      "turnover": 165.49253731343282,
+      "cost_drag": 0.46709474292537306,
+      "tax_drag": 2.868942144197888,
+      "trades": 88,
+      "excess_cagr_ew": -2.92,
+      "excess_sharpe_ew": -0.191,
+      "excess_cagr_nifty": 4.85,
+      "excess_sharpe_nifty": 0.261,
+      "boot_ew_mean": -2.27,
+      "boot_ew_ci": [
+        -9.26,
+        3.97
+      ],
+      "boot_ew_pval": 0.4628,
+      "boot_ew_zero": true,
+      "boot_nifty_ci": [
+        -3.53,
+        11.61
+      ]
+    },
+    {
+      "name": "ML Ranker (Top Quintile, Monthly, Raw)",
+      "gross_cagr": 16.093861484782046,
+      "net_cagr": 13.788891982898587,
+      "after_tax_cagr": 10.694914406157906,
+      "sharpe_net": 0.4703797158260738,
+      "max_dd": 34.421240359082475,
+      "turnover": 710.865671641791,
+      "cost_drag": 2.006384236656716,
+      "tax_drag": 2.7577783965797176,
+      "trades": 378,
+      "excess_cagr_ew": -3.47,
+      "excess_sharpe_ew": -0.244,
+      "excess_cagr_nifty": 4.3,
+      "excess_sharpe_nifty": 0.208,
+      "boot_ew_mean": -2.51,
+      "boot_ew_ci": [
+        -9.81,
+        4.63
+      ],
+      "boot_ew_pval": 0.4816,
+      "boot_ew_zero": true,
+      "boot_nifty_ci": [
+        -3.56,
+        11.16
+      ]
+    },
+    {
+      "name": "ML Ranker (Top 20% in / 40% hold Hysteresis, Monthly)",
+      "gross_cagr": 15.44906857181827,
+      "net_cagr": 14.194193210765693,
+      "after_tax_cagr": 10.999252034375061,
+      "sharpe_net": 0.48650931869190045,
+      "max_dd": 36.57777881680511,
+      "turnover": 387.4029850746268,
+      "cost_drag": 1.0934263300298503,
+      "tax_drag": 2.8388386421531386,
+      "trades": 206,
+      "excess_cagr_ew": -3.07,
+      "excess_sharpe_ew": -0.228,
+      "excess_cagr_nifty": 4.7,
+      "excess_sharpe_nifty": 0.224,
+      "boot_ew_mean": -2.11,
+      "boot_ew_ci": [
+        -9.42,
+        4.82
+      ],
+      "boot_ew_pval": 0.526,
+      "boot_ew_zero": true,
+      "boot_nifty_ci": [
+        -2.82,
+        11.2
+      ]
+    },
+    {
+      "name": "ML Ranker (Top Quintile, Weekly, Raw)",
+      "gross_cagr": 16.57567720611548,
+      "net_cagr": 8.742379241730735,
+      "after_tax_cagr": 6.8579848841066715,
+      "sharpe_net": 0.2215725620568766,
+      "max_dd": 42.82354853815292,
+      "turnover": 2465.462686567164,
+      "cost_drag": 6.958650090626864,
+      "tax_drag": 1.748475848346147,
+      "trades": 1311,
+      "excess_cagr_ew": -8.52,
+      "excess_sharpe_ew": -0.493,
+      "excess_cagr_nifty": -0.75,
+      "excess_sharpe_nifty": -0.041,
+      "boot_ew_mean": -6.84,
+      "boot_ew_ci": [
+        -14.7,
+        0.94
+      ],
+      "boot_ew_pval": 0.0836,
+      "boot_ew_zero": true,
+      "boot_nifty_ci": [
+        -7.93,
+        6.93
+      ]
+    },
+    {
+      "name": "ML Ranker (Top 20% in / 40% hold Hysteresis, Weekly)",
+      "gross_cagr": 16.532196127391742,
+      "net_cagr": 12.647784009222596,
+      "after_tax_cagr": 9.835003956018596,
+      "sharpe_net": 0.4102011914102057,
+      "max_dd": 42.49869573706698,
+      "turnover": 1201.7014925373135,
+      "cost_drag": 3.391744781014925,
+      "tax_drag": 2.5295568018445196,
+      "trades": 632,
+      "excess_cagr_ew": -4.61,
+      "excess_sharpe_ew": -0.304,
+      "excess_cagr_nifty": 3.16,
+      "excess_sharpe_nifty": 0.148,
+      "boot_ew_mean": -3.4,
+      "boot_ew_ci": [
+        -10.74,
+        3.68
+      ],
+      "boot_ew_pval": 0.3364,
+      "boot_ew_zero": true,
+      "boot_nifty_ci": [
+        -3.7,
+        9.67
+      ]
+    }
+  ],
+  "sub_periods": {
+    "2020-2022 Bull/Inflation Shock": {
+      "strategies": [
+        {
+          "strategy": "Mom (12-1M, Top Quintile, Monthly)",
+          "cagr": 13.71,
+          "sharpe": 0.401
+        },
+        {
+          "strategy": "Low-Vol (120D, Top Quintile, Monthly)",
+          "cagr": 25.79,
+          "sharpe": 0.993
+        },
+        {
+          "strategy": "ML Ranker (Top 20% in / 40% hold Hysteresis, Monthly)",
+          "cagr": 16.44,
+          "sharpe": 0.511
+        }
+      ],
+      "ew_cagr": 22.22,
+      "nifty_cagr": 14.37
+    },
+    "2023-2026 Broad Market Rally": {
+      "strategies": [
+        {
+          "strategy": "Mom (12-1M, Top Quintile, Monthly)",
+          "cagr": 15.69,
+          "sharpe": 0.571
+        },
+        {
+          "strategy": "Low-Vol (120D, Top Quintile, Monthly)",
+          "cagr": 9.64,
+          "sharpe": 0.361
+        },
+        {
+          "strategy": "ML Ranker (Top 20% in / 40% hold Hysteresis, Monthly)",
+          "cagr": 12.78,
+          "sharpe": 0.526
+        }
+      ],
+      "ew_cagr": 13.46,
+      "nifty_cagr": 5.73
+    }
+  },
+  "cap_sensitivity": {
+    "50000.0": {
+      "pos_size": 7142.857142857143,
+      "angel_drag": 0.7590289572537313,
+      "angel_net_cagr": 14.47,
+      "flat20_drag": 2.5360878229253725,
+      "flat20_net_cagr": 12.45
+    },
+    "100000.0": {
+      "pos_size": 14285.714285714286,
+      "angel_drag": 0.7590289572537313,
+      "angel_net_cagr": 14.47,
+      "flat20_drag": 1.647558390089552,
+      "flat20_net_cagr": 13.45
+    },
+    "500000.0": {
+      "pos_size": 71428.57142857143,
+      "angel_drag": 0.7590289572537313,
+      "angel_net_cagr": 14.47,
+      "flat20_drag": 0.9367348438208954,
+      "flat20_net_cagr": 14.26
+    }
+  },
+  "min_capital": {
+    "1_stock": {
+      "min_capital": 4000.0,
+      "reason": "Largest single constituent share price (TCS/NESTLEIND)"
+    },
+    "3_stocks": {
+      "min_capital": 25000.0,
+      "reason": "Ensures <= 5% unallocated cash drag across 3 \u20b98,000 lots"
+    },
+    "7_stocks": {
+      "min_capital": 75000.0,
+      "reason": "Ensures <= 3% cash allocation error across 7 \u20b910,000 lots with integer shares"
+    }
+  }
+}

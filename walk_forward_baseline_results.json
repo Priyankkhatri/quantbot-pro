@@ -1,0 +1,46 @@
+{
+  "status": "VALID_OUT_OF_SAMPLE",
+  "generated_at": "2026-10-09T21:51:13 IST",
+  "input_database_file": "market_data_cache.db",
+  "input_database_sha256": "19152d7dfa65a5efa412d1c0c40fb678869ab223b923590a41103d4f5c3beb31",
+  "eval_period": "2016-10-10 to 2026-10-09",
+  "oos_trading_days": 2475,
+  "universe_size": 43,
+  "source_research_file": "reports\\fair_benchmark_research_results.json",
+  "source_research_script": "strategy_research_fair_benchmark.py",
+  "source_research_timestamp": "2026-10-09T21:50:55 IST",
+  "source_research_input_hash": "19152d7dfa65a5efa412d1c0c40fb678869ab223b923590a41103d4f5c3beb31",
+  "baseline_provenance": "Out-of-sample research (strategy_research_fair_benchmark.py, input hash: 19152d7dfa65...)",
+  "benchmarks": {
+    "equal_weight_universe_cagr": 17.26,
+    "equal_weight_universe_sharpe": 0.714,
+    "nifty_50_index_cagr": 9.49,
+    "nifty_50_index_sharpe": 0.262
+  },
+  "best_factor_baseline": {
+    "strategy": "Low-Vol (120D, Top Quintile, Quarterly)",
+    "net_cagr_angel_cnc": 17.313034652691584,
+    "net_cagr_after_tax": 13.322500175494302,
+    "sharpe": 0.7278051333217921,
+    "max_drawdown_pct": 28.96912797055935,
+    "annual_turnover_pct": 150.44776119402985,
+    "bootstrap_95_ci_excess_vs_ew": [
+      -7.05,
+      6.64
+    ],
+    "bootstrap_p_val": 1.0
+  },
+  "turnover_controlled_ml_ranker": {
+    "strategy": "ML Ranker (Top Quintile, Monthly, Raw)",
+    "net_cagr_angel_cnc": 13.788891982898587,
+    "net_cagr_after_tax": 10.694914406157906,
+    "sharpe": 0.4703797158260738,
+    "max_drawdown_pct": 34.421240359082475,
+    "annual_turnover_pct": 710.865671641791,
+    "bootstrap_95_ci_excess_vs_ew": [
+      -9.81,
+      4.63
+    ],
+    "bootstrap_p_val": 0.4816
+  }
+}

@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Real-Time Market Trading Terminal</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- TradingView Lightweight Charts for Real-Time Millisecond Candlestick rendering -->
+    <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body { background-color: #0b0f19; color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; overflow: hidden; }
+        .glow-buy { animation: glow-green 1.2s ease-in-out; }
+        .glow-sell { animation: glow-red 1.2s ease-in-out; }
+        @keyframes glow-green {
+            0% { box-shadow: 0 0 5px #10b981; }
+            50% { box-shadow: 0 0 35px #10b981; border-color: #10b981; }
+            100% { box-shadow: 0 0 5px #10b981; }
+        }
+        @keyframes glow-red {
+            0% { box-shadow: 0 0 5px #ef4444; }
+            50% { box-shadow: 0 0 35px #ef4444; border-color: #ef4444; }
+            100% { box-shadow: 0 0 5px #ef4444; }
+        }
+        .tick-up { color: #10b981 !important; transition: all 0.15s ease; }
+        .tick-down { color: #ef4444 !important; transition: all 0.15s ease; }
+        .bg-pulse-up { background-color: rgba(16, 185, 129, 0.25) !important; }
+        .bg-pulse-down { background-color: rgba(239, 68, 68, 0.25) !important; }
+    </style>
+</head>
+<body class="h-screen flex flex-col select-none">
+
+    <!-- Top Live Ticker Ribbon -->
+    <header class="bg-[#131b2e] border-b border-slate-800 px-6 py-3 flex items-center justify-between z-10">
+        <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-2">
+                <span class="relative flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                </span>
+                <span class="text-sm font-bold text-white tracking-wide">LIVE TICK STREAM</span>
+            </div>
+            <span class="bg-emerald-950/80 border border-emerald-700/60 text-emerald-400 text-xs px-3 py-1 rounded-full font-mono font-medium" id="wsStatus">
+                ● Connected to Live Market
+            </span>
+        </div>
+
+        <div class="flex items-center space-x-8 text-xs">
+            <div class="flex items-center space-x-2">
+                <span class="text-gray-400">Market: </span>
+                <span class="font-bold text-white font-mono text-sm px-2 py-0.5 bg-slate-800 rounded" id="displaySymbol">BTC/USDT (24/7 Live)</span>
+            </div>
+            <div class="flex items-center space-x-2">
+                <span class="text-gray-400">Live Price: </span>
+                <span class="font-bold font-mono text-base text-emerald-400 transition-all duration-150 px-2 py-0.5 rounded" id="livePriceHeader">$0.00</span>
+            </div>
+            <div>
+                <span class="text-gray-400">Portfolio: </span>
+                <span class="font-bold text-white font-mono text-sm" id="accBalance">₹10,000.00</span>
+            </div>
+            <div>
+                <span class="text-gray-400">Position: </span>
+                <span class="font-bold text-yellow-400 font-mono text-xs" id="posStatus">FLAT</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Live Workspace -->
+    <div class="flex-1 flex overflow-hidden">
+        
+        <!-- Left: Live Interactive Candlestick Chart -->
+        <div class="flex-1 bg-[#0b0f19] p-3 flex flex-col relative">
+            <div class="flex items-center justify-between px-3 py-1 text-xs text-gray-400 border-b border-slate-800/80 mb-2">
+                <div class="flex items-center space-x-4">
+                    <span class="font-semibold text-white flex items-center space-x-1">
+                        <i data-lucide="candlestick-chart" class="w-3.5 h-3.5 text-blue-400"></i>
+                        <span>1-Second Real-Time Moving Candles</span>
+                    </span>
+                    <span class="text-[11px] text-gray-500">Updates every 500ms</span>
+                </div>
+                <div class="flex items-center space-x-4 font-mono text-[11px]">
+                    <span>EMA(9): <b class="text-emerald-400" id="liveEma9">--</b></span>
+                    <span>EMA(21): <b class="text-yellow-400" id="liveEma21">--</b></span>
+                    <span>RSI(14): <b class="text-blue-400" id="liveRsi">--</b></span>
+                </div>
+            </div>
+
+            <!-- Chart Canvas Container -->
+            <div id="chartContainer" class="flex-1 w-full rounded-lg overflow-hidden border border-slate-800 relative">
+                <!-- Floating Order Popup Alert -->
+                <div id="actionBanner" class="hidden absolute top-4 left-4 right-4 bg-slate-900/95 backdrop-blur-md border border-slate-700 p-4 rounded-xl shadow-2xl z-50 flex items-center justify-between transition-all duration-300">
+                    <div class="flex items-center space-x-4">
+                        <div id="actionIcon" class="w-12 h-12 rounded-lg flex items-center justify-center font-bold text-xl text-white bg-emerald-600 shadow-lg shadow-emerald-500/50">
+                            BUY
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold text-white" id="actionTitle">EXECUTED LIVE ORDER</h3>
+                            <p class="text-xs text-gray-300" id="actionDesc">Rule Triggered: EMA 9 crossed above EMA 21</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-xs text-gray-400">Execution Price</div>
+                        <div class="text-lg font-bold text-white font-mono" id="actionPrice">$0.00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Order Book & Bot Controls -->
+        <div class="w-80 bg-[#131b2e] border-l border-slate-800 flex flex-col">
+            
+            <!-- Live Order Execution Pad (Bot clicks this visibly) -->
+            <div class="p-4 border-b border-slate-800 space-y-3">
+                <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider flex justify-between">
+                    <span>Live Automated Pad</span>
+                    <span class="text-emerald-400 font-mono text-[10px]" id="botActiveTag">● BOT ACTIVE</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <button id="btnBuy" class="bg-emerald-600/90 hover:bg-emerald-500 text-white font-bold py-3 rounded-lg text-xs transition duration-150 flex flex-col items-center border border-emerald-500/30">
+                        <span class="text-sm font-black tracking-wide">BUY / LONG</span>
+                        <span class="text-[10px] text-emerald-200" id="btnBuySub">Signal Scan...</span>
+                    </button>
+                    <button id="btnSell" class="bg-rose-600/90 hover:bg-rose-500 text-white font-bold py-3 rounded-lg text-xs transition duration-150 flex flex-col items-center border border-rose-500/30">
+                        <span class="text-sm font-black tracking-wide">SELL / CLOSE</span>
+                        <span class="text-[10px] text-rose-200" id="btnSellSub">Risk Guard</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Live Order Book (Simulated / Real Stream) -->
+            <div class="p-4 border-b border-slate-800 space-y-2">
+                <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider flex justify-between">
+                    <span>Live Depth / Order Book</span>
+                    <span class="text-[10px] text-gray-500">Live Ticks</span>
+                </div>
+                <div class="space-y-1 font-mono text-[11px]" id="orderBookAsks">
+                    <!-- Injected asks -->
+                </div>
+                <div class="py-1 text-center font-mono font-bold text-sm text-emerald-400 border-y border-slate-800" id="spreadPrice">
+                    $0.00
+                </div>
+                <div class="space-y-1 font-mono text-[11px]" id="orderBookBids">
+                    <!-- Injected bids -->
+                </div>
+            </div>
+
+            <!-- Bot Live Terminal Logs -->
+            <div class="flex-1 flex flex-col p-4 overflow-hidden">
+                <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Live Bot Decision Audit</div>
+                <div class="flex-1 bg-[#0b0f19] border border-slate-800 rounded-lg p-3 font-mono text-[11px] overflow-y-auto space-y-1" id="logContainer">
+                    <div class="text-emerald-400">[SYSTEM] Live real-time market stream connected.</div>
+                    <div class="text-blue-400">[ALGO] Real-time 1s candlestick aggregation started.</div>
+                    <div class="text-gray-400">[SCAN] Calculating tick-by-tick EMA cross & RSI...</div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // 1. Initialize Lightweight Charts
+        const chartContainer = document.getElementById('chartContainer');
+        const chart = LightweightCharts.createChart(chartContainer, {
+            layout: {
+                background: { color: '#0b0f19' },
+                textColor: '#94a3b8',
+            },
+            grid: {
+                vertLines: { color: '#1e293b' },
+                horzLines: { color: '#1e293b' },
+            },
+            crosshair: {
+                mode: LightweightCharts.CrosshairMode.Normal,
+            },
+            timeScale: {
+                timeVisible: true,
+                secondsVisible: true,
+                borderColor: '#1e293b',
+            },
+            rightPriceScale: {
+                borderColor: '#1e293b',
+            },
+        });
+
+        const candleSeries = chart.addCandlestickSeries({
+            upColor: '#10b981',
+            downColor: '#ef4444',
+            borderVisible: false,
+            wickUpColor: '#10b981',
+            wickDownColor: '#ef4444',
+        });
+
+        const ema9Series = chart.addLineSeries({
+            color: '#10b981',
+            lineWidth: 1.5,
+            priceLineVisible: false,
+        });
+
+        const ema21Series = chart.addLineSeries({
+            color: '#f59e0b',
+            lineWidth: 1.5,
+            priceLineVisible: false,
+        });
+
+        // Resize chart dynamically
+        window.addEventListener('resize', () => {
+            chart.applyOptions({
+                width: chartContainer.clientWidth,
+                height: chartContainer.clientHeight
+            });
+        });
+
+        // 2. Market State & Live Simulation
+        let currentPrice = 67450.0;
+        let lastPrice = currentPrice;
+        let currentTime = Math.floor(Date.now() / 1000) - 300;
+        let candles = [];
+        let ema9History = [];
+        let ema21History = [];
+        let priceHistory = [];
+
+        // Generate initial 60 historical 1-second bars
+        for (let i = 0; i < 60; i++) {
+            const open = currentPrice + (Math.random() - 0.5) * 8;
+            const high = open + Math.random() * 6;
+            const low = open - Math.random() * 6;
+            const close = (open + high + low) / 3;
+            currentPrice = close;
+            currentTime += 1;
+
+            candles.push({ time: currentTime, open, high, low, close });
+            priceHistory.push(close);
+        }
+
+        candleSeries.setData(candles);
+
+        // 3. Helper Indicators
+        function calculateEMA(data, period) {
+            const k = 2 / (period + 1);
+            let ema = data[0];
+            const results = [ema];
+            for (let i = 1; i < data.length; i++) {
+                ema = (data[i] * k) + (ema * (1 - k));
+                results.push(ema);
+            }
+            return results;
+        }
+
+        function calculateRSI(data, period = 14) {
+            if (data.length < period + 1) return 50;
+            let gains = 0, losses = 0;
+            for (let i = data.length - period; i < data.length; i++) {
+                const diff = data[i] - data[i - 1];
+                if (diff >= 0) gains += diff;
+                else losses -= diff;
+            }
+            if (losses === 0) return 100;
+            const rs = gains / losses;
+            return 100 - (100 / (1 + rs));
+        }
+
+        function appendLog(msg, colorClass = "text-gray-300") {
+            const container = document.getElementById('logContainer');
+            const time = new Date().toLocaleTimeString();
+            const div = document.createElement('div');
+            div.className = colorClass;
+            div.innerText = `[${time}] ${msg}`;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // 4. Live WebSocket / Real-time Tick Engine
+        let wsConnected = false;
+        let ws = null;
+
+        function connectRealTimeStream() {
+            try {
+                ws = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@trade');
+                
+                ws.onopen = () => {
+                    wsConnected = true;
+                    document.getElementById('wsStatus').innerText = "● Live Binance WebSocket Connected";
+                    appendLog("Connected to Binance live tick stream.", "text-emerald-400 font-bold");
+                };
+
+                ws.onmessage = (event) => {
+                    const msg = JSON.parse(event.data);
+                    if (msg && msg.p) {
+                        handleNewPriceTick(parseFloat(msg.p));
+                    }
+                };
+
+                ws.onerror = () => {
+                    wsConnected = false;
+                    document.getElementById('wsStatus').innerText = "● Simulated High-Speed Feed";
+                };
+
+                ws.onclose = () => {
+                    wsConnected = false;
+                    setTimeout(connectRealTimeStream, 3000);
+                };
+            } catch (e) {
+                wsConnected = false;
+            }
+        }
+
+        connectRealTimeStream();
+
+        // Fallback local tick generator if offline / market delay
+        setInterval(() => {
+            if (!wsConnected) {
+                const delta = (Math.random() - 0.495) * 4.5;
+                handleNewPriceTick(currentPrice + delta);
+            }
+        }, 500);
+
+        // 5. Real-Time Price Handler & Bot Decision Engine
+        let currentCandle = null;
+        let inPosition = false;
+        let entryPrice = 0;
+        let stopLoss = 0;
+        let takeProfit = 0;
+        let positionUnits = 0.15;
+        let totalPnL = 0;
+        let capital = 10000;
+
+        function handleNewPriceTick(price) {
+            lastPrice = currentPrice;
+            currentPrice = price;
+
+            // Update UI Price Pulse
+            const priceElem = document.getElementById('livePriceHeader');
+            const spreadElem = document.getElementById('spreadPrice');
+            priceElem.innerText = `$${currentPrice.toFixed(2)}`;
+            spreadElem.innerText = `$${currentPrice.toFixed(2)}`;
+
+            if (currentPrice > lastPrice) {
+                priceElem.className = "font-bold font-mono text-base tick-up bg-pulse-up px-2 py-0.5 rounded";
+            } else if (currentPrice < lastPrice) {
+                priceElem.className = "font-bold font-mono text-base tick-down bg-pulse-down px-2 py-0.5 rounded";
+            }
+
+            // Update 1-Second Candle
+            const nowSec = Math.floor(Date.now() / 1000);
+            if (!currentCandle || currentCandle.time !== nowSec) {
+                currentCandle = {
+                    time: nowSec,
+                    open: currentPrice,
+                    high: currentPrice,
+                    low: currentPrice,
+                    close: currentPrice
+                };
+            } else {
+                currentCandle.high = Math.max(currentCandle.high, currentPrice);
+                currentCandle.low = Math.min(currentCandle.low, currentPrice);
+                currentCandle.close = currentPrice;
+            }
+
+            candleSeries.update(currentCandle);
+            priceHistory.push(currentPrice);
+            if (priceHistory.length > 200) priceHistory.shift();
+
+            // Calculate Live Indicators
+            const ema9Arr = calculateEMA(priceHistory, 9);
+            const ema21Arr = calculateEMA(priceHistory, 21);
+            const rsi = calculateRSI(priceHistory, 14);
+
+            const currEma9 = ema9Arr[ema9Arr.length - 1];
+            const currEma21 = ema21Arr[ema21Arr.length - 1];
+            const prevEma9 = ema9Arr[ema9Arr.length - 2] || currEma9;
+            const prevEma21 = ema21Arr[ema21Arr.length - 2] || currEma21;
+
+            ema9Series.update({ time: nowSec, value: currEma9 });
+            ema21Series.update({ time: nowSec, value: currEma21 });
+
+            document.getElementById('liveEma9').innerText = `$${currEma9.toFixed(2)}`;
+            document.getElementById('liveEma21').innerText = `$${currEma21.toFixed(2)}`;
+            document.getElementById('liveRsi').innerText = `${rsi.toFixed(1)}`;
+
+            // Update Order Book Display
+            renderOrderBook(currentPrice);
+
+            // --- BOT DECISION ENGINE ---
+            if (inPosition) {
+                // Check Take Profit or Stop Loss
+                let exitReason = null;
+                if (currentPrice >= takeProfit) {
+                    exitReason = "Target Take-Profit Reached";
+                } else if (currentPrice <= stopLoss) {
+                    exitReason = "Stop-Loss Risk Guard";
+                } else if (currEma9 < currEma21) {
+                    exitReason = "EMA Reversal Cross";
+                }
+
+                if (exitReason) {
+                    executeExit(currentPrice, exitReason);
+                }
+            } else {
+                // Check Buy Trigger: Bullish EMA 9 cross above EMA 21 + RSI momentum
+                const isBullishCross = (prevEma9 <= prevEma21) && (currEma9 > currEma21);
+                if (isBullishCross && rsi > 45 && rsi < 70) {
+                    executeBuy(currentPrice);
+                }
+            }
+        }
+
+        function executeBuy(price) {
+            inPosition = true;
+            entryPrice = price;
+            stopLoss = price * 0.996; // 0.4% Stop Loss
+            takeProfit = price * 1.008; // 0.8% Take Profit (1:2 RR)
+
+            const btnBuy = document.getElementById('btnBuy');
+            btnBuy.classList.add('glow-buy');
+            setTimeout(() => btnBuy.classList.remove('glow-buy'), 1500);
+
+            const banner = document.getElementById('actionBanner');
+            const icon = document.getElementById('actionIcon');
+            icon.className = "w-12 h-12 rounded-lg flex items-center justify-center font-bold text-xl text-white bg-emerald-600 shadow-lg shadow-emerald-500/50";
+            icon.innerText = "BUY";
+            document.getElementById('actionTitle').innerText = `BOT EXECUTED BUY ORDER: ${positionUnits} Units`;
+            document.getElementById('actionDesc').innerText = `Dynamic SL: $${stopLoss.toFixed(2)} | Target: $${takeProfit.toFixed(2)}`;
+            document.getElementById('actionPrice').innerText = `$${price.toFixed(2)}`;
+            
+            document.getElementById('posStatus').innerText = `LONG @ $${price.toFixed(2)}`;
+            document.getElementById('posStatus').className = "font-bold text-emerald-400 font-mono text-xs";
+
+            banner.classList.remove('hidden');
+            appendLog(`[BUY ORDER] Bought ${positionUnits} units @ $${price.toFixed(2)} | Target: $${takeProfit.toFixed(2)} | SL: $${stopLoss.toFixed(2)}`, "text-emerald-400 font-bold");
+            setTimeout(() => banner.classList.add('hidden'), 3500);
+        }
+
+        function executeExit(price, reason) {
+            inPosition = false;
+            const pnl = (price - entryPrice) * positionUnits;
+            totalPnL += pnl;
+            capital += pnl;
+
+            const btnSell = document.getElementById('btnSell');
+            btnSell.classList.add('glow-sell');
+            setTimeout(() => btnSell.classList.remove('glow-sell'), 1500);
+
+            const isProfit = pnl >= 0;
+            const banner = document.getElementById('actionBanner');
+            const icon = document.getElementById('actionIcon');
+            icon.className = `w-12 h-12 rounded-lg flex items-center justify-center font-bold text-xl text-white ${isProfit ? 'bg-emerald-600' : 'bg-rose-600'} shadow-lg`;
+            icon.innerText = "EXIT";
+            document.getElementById('actionTitle').innerText = `POSITION CLOSED: ${reason}`;
+            document.getElementById('actionDesc').innerText = `Net PnL: ${isProfit ? '+' : ''}$${pnl.toFixed(2)}`;
+            document.getElementById('actionPrice').innerText = `$${price.toFixed(2)}`;
+
+            document.getElementById('posStatus').innerText = `FLAT (Profit: ${isProfit ? '+' : ''}$${pnl.toFixed(2)})`;
+            document.getElementById('posStatus').className = `font-bold ${isProfit ? 'text-emerald-400' : 'text-rose-400'} font-mono text-xs`;
+            document.getElementById('accBalance').innerText = `₹${(capital * 83.5).toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
+
+            banner.classList.remove('hidden');
+            appendLog(`[EXIT ORDER] Closed trade @ $${price.toFixed(2)} | Realized: ${isProfit ? '+' : ''}$${pnl.toFixed(2)} (${reason})`, isProfit ? "text-emerald-400 font-bold" : "text-rose-400 font-bold");
+            setTimeout(() => banner.classList.add('hidden'), 3500);
+        }
+
+        function renderOrderBook(centerPrice) {
+            const asksDiv = document.getElementById('orderBookAsks');
+            const bidsDiv = document.getElementById('orderBookBids');
+
+            asksDiv.innerHTML = `
+                <div class="flex justify-between text-rose-400"><span>$${(centerPrice + 1.2).toFixed(2)}</span><span>0.412 BTC</span></div>
+                <div class="flex justify-between text-rose-400"><span>$${(centerPrice + 0.6).toFixed(2)}</span><span>1.285 BTC</span></div>
+                <div class="flex justify-between text-rose-400"><span>$${(centerPrice + 0.2).toFixed(2)}</span><span>0.850 BTC</span></div>
+            `;
+
+            bidsDiv.innerHTML = `
+                <div class="flex justify-between text-emerald-400"><span>$${(centerPrice - 0.2).toFixed(2)}</span><span>0.920 BTC</span></div>
+                <div class="flex justify-between text-emerald-400"><span>$${(centerPrice - 0.7).toFixed(2)}</span><span>1.550 BTC</span></div>
+                <div class="flex justify-between text-emerald-400"><span>$${(centerPrice - 1.4).toFixed(2)}</span><span>0.380 BTC</span></div>
+            `;
+        }
+
+        // Trigger initial resize after DOM ready
+        setTimeout(() => {
+            chart.applyOptions({
+                width: chartContainer.clientWidth,
+                height: chartContainer.clientHeight
+            });
+        }, 200);
+    </script>
+</body>
+</html>

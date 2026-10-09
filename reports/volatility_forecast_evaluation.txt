@@ -1,0 +1,29 @@
+===============================================================================================
+   QUANTBOT PRO: VOLATILITY FORECASTING & QLIKE LOSS EVALUATION AUDIT
+   Execution Timestamp: 2026-10-09 21:54:47 IST
+===============================================================================================
+
+1. MATHEMATICAL FORMULATION & UNIT SPECIFICATION:
+   • Target Series (y_t)  : Nifty 50 (^NSEI) 21-day forward realized volatility (% annualized)
+   • Target Formula       : y_t = sqrt( 252/21 * sum_{i=1..21} r_{t+i}^2 ) * 100
+   • Evaluation Period    : 2019-10-18 to 2026-09-08 (1,686 out-of-sample trading days)
+   • QLIKE Loss Formula   : QLIKE(sigma^2, hat_sigma^2) = ln(hat_sigma^2) + (sigma^2 / hat_sigma^2)
+   • QLIKE Units          : sigma and hat_sigma in % annualized volatility (e.g. 15.0 -> sigma^2 = 225.0)
+   • RMSE / MAE Units     : Percentage points of annualized volatility (% vol)
+
+-----------------------------------------------------------------------------------------------
+Model Name                          | RMSE (% vol)  | MAE (% vol)   | QLIKE Loss   | Rank
+-----------------------------------------------------------------------------------------------
+HAR-RV Linear Model (Baseline 3)    | 8.27          | 4.53          | 6.5612       | #1
+Random Forest ML Volatility         | 9.22          | 4.86          | 6.6605       | #2
+EWMA Span=21 (alpha=0.0909, lambda=0.909) | 9.25          | 5.06          | 6.5771       | #3
+EWMA RiskMetrics (lambda=0.94, alpha=0.06) | 9.38          | 5.14          | 6.5928       | #4
+Trailing 21D Vol (Baseline 1)       | 9.69          | 5.22          | 6.6115       | #5
+-----------------------------------------------------------------------------------------------
+
+2. DIEBOLD-MARIANO TESTS (h=21, Newey-West adjusted, Baseline = HAR-RV):
+   • HAR-RV vs Random Forest ML Volatility : DM = -1.9984 (p = 0.0457) -> Statistically Significant (p < 0.05)
+   • HAR-RV vs EWMA RiskMetrics (lambda=0.94, alpha=0.06): DM = -1.9365 (p = 0.0528) -> No Significant Difference
+   • HAR-RV vs EWMA Span=21 (alpha=0.0909, lambda=0.909): DM = -1.7424 (p = 0.0814) -> No Significant Difference
+   • HAR-RV vs Trailing 21D Vol (Baseline 1): DM = -1.6690 (p = 0.0951) -> No Significant Difference
+===============================================================================================

@@ -1,0 +1,5 @@
+symbol,timestamp,field,before_value,after_value,reason
+GOLDBEES.NS,2019-12-19 00:00:00,"open,high,low,close","O=0.3020, H=0.3630, L=0.3010, C=0.3355","O=30.2000, H=36.3000, L=30.1000, C=33.5500",Repaired 100x decimal division glitch in Yahoo Finance feed (2-day drop to ₹0.33 vs actual NAV ₹33.50)
+GOLDBEES.NS,2019-12-20 00:00:00,"open,high,low,close","O=0.3380, H=0.3390, L=0.3355, C=0.3365","O=33.8000, H=33.9000, L=33.5500, C=33.6500",Repaired 100x decimal division glitch in Yahoo Finance feed (2-day drop to ₹0.33 vs actual NAV ₹33.50)
+BANKBEES.NS,2019-12-19 00:00:00,"open,high,low,close","O=33.1630, H=33.1750, L=32.7340, C=32.9510","O=331.6300, H=331.7500, L=327.3400, C=329.5100",Repaired 10x decimal division glitch in Yahoo Finance feed (2-day drop to ₹33.0 vs actual NAV ₹330.0)
+BANKBEES.NS,2019-12-20 00:00:00,"open,high,low,close","O=32.9550, H=33.1550, L=32.9450, C=33.0910","O=329.5500, H=331.5500, L=329.4500, C=330.9100",Repaired 10x decimal division glitch in Yahoo Finance feed (2-day drop to ₹33.0 vs actual NAV ₹330.0)
